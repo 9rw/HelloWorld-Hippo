@@ -8,7 +8,7 @@ import { link } from "fs";
 
 export default function Nav() {
   return (
-    <nav className="z-50 fixed top-0 flex justify-between items-center px-10 py-4 w-full h-[164px] bg-[#ffffff50] text-primary-background backdrop-blur-md border-b-2 shadow-sm">
+    <nav className="z-50 fixed top-0 flex justify-between items-center px-10 py-4 w-full h-[164px] bg-white text-primary-background border-b-2 border-primary-foreground/20 shadow-lg">
       <div className="min-w-[200px] min-h-[100px] max-h-[100px] max-w-[200px]">
         <Image
           src="/logo.svg"
@@ -20,7 +20,7 @@ export default function Nav() {
         ></Image>
       </div>
       <div className="flex flex-col max-w-[600px] w-full">
-        <div className="flex flex-row justify-between items-center border-2 border-[#0d3168dd] rounded-lg w-full h-[50px]">
+        <div className="flex flex-row justify-between items-center bg-white border-2 border-[#0d3168dd] rounded-lg w-full h-[50px]">
           <Input
             type="search"
             placeholder="SEARCH FOR ACTIVITIES"
