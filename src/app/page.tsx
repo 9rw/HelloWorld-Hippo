@@ -1,6 +1,5 @@
-import TableComponent from "../pages/table";
-import TimeTableComponent from "../pages/timetable";
-import AnnounceComponent from "../pages/announce";
+import TimeTableComponent from "../components/timetable";
+import AnnounceComponent from "../components/announce";
 import Image from "next/image";
 
 export default function page() {
