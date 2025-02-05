@@ -4,7 +4,11 @@ import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search, Globe, Menu } from "lucide-react";
-import { link } from "fs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 export default function Nav() {
   return (
@@ -31,7 +35,7 @@ export default function Nav() {
             <Search />
           </Button>
         </div>
-        <div className="flex flex-row gap-6 justify-start items-center">
+        <div className="flex flex-row gap-6 justify-start items-center max-sm:hidden">
           {["CB2", "LX Building", "SIT Building"].map((building, index) => (
             <Button
               key={index}
@@ -43,8 +47,8 @@ export default function Nav() {
           ))}
         </div>
       </div>
-      <div className="relative w-max h-[100px] mt-[10px] flex items-start flex-row">
-        <div className="flex flex-row">
+      <div className="relative w-max h-[100px] mt-[10px] flex items-start flex-row max-lg:mt-[5px] max-md:mt-0">
+        <div className="flex flex-row max-lg:hidden">
           <Button variant={"link"}>
             <Globe />
           </Button>
@@ -52,13 +56,23 @@ export default function Nav() {
           <hr className="h-[36px] w-[1px] bg-black" />
           <Button variant={"link"}>TH</Button>
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 max-lg:hidden">
           <Button variant={"secondary"}>Help</Button>
           <Button variant={"secondary"}>Report</Button>
         </div>
-        <Button variant={"link"}>
-          <Menu />
-        </Button>
+        <Popover>
+        <PopoverTrigger asChild>
+          <button className="max-lg:ml-10 max-lg:self-center">
+            <Menu size={40}/>
+          </button>
+          </PopoverTrigger>
+          <PopoverContent className="flex flex-col gap-2 p-2">
+            <Button variant={"building"} className="relative before:rounded-md">Booking History</Button>
+            <Button variant={"building"} className="relative before:rounded-md">Report Rooms</Button>
+            <Button variant={"building"} className="relative before:rounded-md">Help</Button>
+            <Button variant={"link"}>contact</Button>
+          </PopoverContent>
+        </Popover>
       </div>
     </nav>
   );

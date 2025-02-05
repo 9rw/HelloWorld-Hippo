@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 export default function footer() {
   return (
@@ -21,21 +22,21 @@ export default function footer() {
         <div className="flex flex-col">
           <h4 className="text-[20px] py-4">Menu</h4>
           <div className="flex justify-between items-start flex-col h-full">
-            <Link href={`#`} className="text-sm">
+            <Button variant={`link`} className="text-white p-0 text-sm">
               Check the rooms
-            </Link>
-            <Link href={`#`} className="text-sm">
+            </Button>
+            <Button variant={`link`} className="text-white p-0 text-sm">
               Building Areas
-            </Link>
-            <Link href={`#`} className="text-sm">
+            </Button>
+            <Button variant={`link`} className="text-white p-0 text-sm">
               Reservation
-            </Link>
-            <Link href={`#`} className="text-sm">
+            </Button>
+            <Button variant={`link`} className="text-white p-0 text-sm">
               Help
-            </Link>
-            <Link href={`#`} className="text-sm">
+            </Button>
+            <Button variant={`link`} className="text-white p-0 text-sm">
               Report
-            </Link>
+            </Button>
           </div>
         </div>
         <div className="flex flex-col">
@@ -88,31 +89,37 @@ export default function footer() {
         </div>
         <div className="flex flex-row">
           <div className="min-h-max min-w-max">
-            <Image
-              src={`/icons/facebook.svg`}
-              width={58}
-              height={58}
-              alt="facebook"
-              className="self-start"
-            />
+            <div className="size[58px]">
+              <Image
+                src={`/icons/facebook.svg`}
+                width={58}
+                height={58}
+                alt="facebook"
+                className="self-start duration-300 hover:scale-110 cursor-pointer"
+              />
+            </div>
           </div>
           <div className="min-h-max min-w-max">
-            <Image
-              src={`/icons/instagram.svg`}
-              width={58}
-              height={58}
-              alt="instagram"
-              className="self-start"
-            />
+            <div className="size[58px]">
+              <Image
+                src={`/icons/instagram.svg`}
+                width={58}
+                height={58}
+                alt="instagram"
+                className="self-start duration-300 hover:scale-110 cursor-pointer"
+              />
+            </div>
           </div>
           <div className="min-h-max min-w-max">
-            <Image
-              src={`/icons/youtube.svg`}
-              width={58}
-              height={58}
-              alt="youtube"
-              className="self-start"
-            />
+            <div className="size[58px]">
+              <Image
+                src={`/icons/youtube.svg`}
+                width={58}
+                height={58}
+                alt="youtube"
+                className="self-start duration-300 hover:scale-110 cursor-pointer"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -122,11 +129,23 @@ export default function footer() {
         rights reserved
       </p>
       <div className="text-[12px] flex flex-row justify-center items-center gap-8 h-max">
-        <span>Reservation conditions</span>
+        <span>
+          <Button variant={"link"} className="text-white">
+            Reservation conditions
+          </Button>
+        </span>
         <hr className="w-[1px] h-[24px] bg-white" />
-        <span>Cookie Policy</span>
+        <span>
+          <Button variant={"link"} className="text-white">
+            Cookie Policy
+          </Button>
+        </span>
         <hr className="w-[1px] h-[24px] bg-white" />
-        <span>Website Feedback</span>
+        <span>
+          <Button variant={"link"} className="text-white">
+            Website Feedback
+          </Button>
+        </span>
       </div>
     </footer>
   );
