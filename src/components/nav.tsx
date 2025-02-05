@@ -70,7 +70,7 @@ export default function Nav() {
             <Button variant={"building"} className="relative before:rounded-md">Booking History</Button>
             <Button variant={"building"} className="relative before:rounded-md">Report Rooms</Button>
             <Button variant={"building"} className="relative before:rounded-md">Help</Button>
-            <Button variant={"link"}>contact</Button>
+            <Button variant={"link"} className="w-max p-0 self-center">contact</Button>
           </PopoverContent>
         </Popover>
       </div>
