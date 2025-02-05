@@ -130,19 +130,19 @@ export default function footer() {
       </p>
       <div className="text-[12px] flex flex-row justify-center items-center gap-8 h-max">
         <span>
-          <Button variant={"link"} className="text-white">
+          <Button variant={"link"} className="text-white text-[12px]">
             Reservation conditions
           </Button>
         </span>
         <hr className="w-[1px] h-[24px] bg-white" />
         <span>
-          <Button variant={"link"} className="text-white">
+          <Button variant={"link"} className="text-white text-[12px]">
             Cookie Policy
           </Button>
         </span>
         <hr className="w-[1px] h-[24px] bg-white" />
         <span>
-          <Button variant={"link"} className="text-white">
+          <Button variant={"link"} className="text-white text-[12px]">
             Website Feedback
           </Button>
         </span>
