@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 
 export default function footer() {
   return (
-    <footer className="text-[#DFDFDF] bg-[#041224] w-full h-max px-[100px] py-20">
+    <footer className="text-[#DFDFDF] bg-[#041224] w-full h-max max-lg:px-0 px-[100px] py-20">
       <div className="flex flex-row justify-center h-max gap-10 max-md:flex-col">
         <div className="flex flex-col">
           <Image
@@ -95,7 +95,7 @@ export default function footer() {
                 width={58}
                 height={58}
                 alt="facebook"
-                className="self-start duration-300 hover:scale-110 cursor-pointer"
+                className="max-lg:size-[40] self-start duration-300 hover:scale-110 cursor-pointer"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function footer() {
                 width={58}
                 height={58}
                 alt="instagram"
-                className="self-start duration-300 hover:scale-110 cursor-pointer"
+                className="max-lg:size-[40] self-start duration-300 hover:scale-110 cursor-pointer"
               />
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function footer() {
                 width={58}
                 height={58}
                 alt="youtube"
-                className="self-start duration-300 hover:scale-110 cursor-pointer"
+                className="max-lg:size-[40] self-start duration-300 hover:scale-110 cursor-pointer"
               />
             </div>
           </div>
