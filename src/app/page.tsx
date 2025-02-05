@@ -3,20 +3,13 @@ import TimeTableComponent from "../components/timetable";
 import AnnounceComponent from "../components/announce";
 import Image from "next/image";
 import TestComponent from "../components/renderBuilding";
+import { Button } from "@/components/ui/button";
+import HeroComponent from "../components/hero";
 
 export default function page() {
   return (
     <>
-      <section className="relative flex w-full h-screen flex-row items-start">
-        {/* <AnnounceComponent /> */}
-        <Image
-          src="/SIT Building.webp"
-          alt="SIT"
-          width={2560}
-          height={1696}
-          className="absolute w-full h-screen object-cover"
-        ></Image>
-      </section>
+      <HeroComponent />
       {/* <section>
         <TimeTableComponent />
       </section> */}
