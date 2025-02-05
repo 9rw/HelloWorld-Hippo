@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Konkhmer_Sleokchher } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import NavComponent from "@/components/nav";
+import FooterComponent from "@/components/footer";
 import "./globals.css";
 
 const konkhmer_Sleokchher = Konkhmer_Sleokchher({
@@ -27,6 +28,8 @@ export default function RootLayout({
         <NavComponent />
         {children}
         <Toaster />
+
+      <FooterComponent />
       </body>
     </html>
   );
