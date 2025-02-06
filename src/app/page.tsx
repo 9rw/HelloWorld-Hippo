@@ -23,31 +23,26 @@ import { Button } from "@/components/ui/button";
 
 import { Check, ChevronsUpDown } from "lucide-react";
 
+import TableComponent from "@/components/timetable";
+
 const areas = [
   {
-    value: "CB2 Building",
-    label: "CB2 Building",
+    value: "CB2 Building"
   },
   {
-    value: "LX Building",
-    label: "LX Building",
+    value: "LX Building"
   },
   {
-    value: "SIT Building",
-    label: "SIT Building",
+    value: "SIT Building"
   },
 ];
 
 export default function page() {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const [room, setRoom] = useState<string>("");
   return (
     <>
       <HeroComponent />
-      {/* <section>
-        <TimeTableComponent />
-      </section> */}
       <section className="relative flex w-full h-max flex-col items-start">
         <h1 className="text-[#0d3168dd] text-center w-full my-20 lg:text-6xl md:text-4xl text-2xl">
           Have fun using the classroom.
@@ -58,10 +53,10 @@ export default function page() {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[200px] justify-between"
+              className="text-secondary-foreground/50 w-[200px] justify-between ml-[40px]"
             >
               {value
-                ? areas.find((areas) => areas.value === value)?.label
+                ? areas.find((areas) => areas.value === value)?.value
                 : "Building Areas"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -81,7 +76,7 @@ export default function page() {
                         setOpen(false);
                       }}
                     >
-                      {areas.label}
+                      {areas.value}
                       <Check
                         className={cn(
                           "ml-auto",
