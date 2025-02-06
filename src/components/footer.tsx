@@ -128,7 +128,7 @@ export default function footer() {
         Copyright © 2025 King Mongkut’s University of Technology Thonburi, All
         rights reserved
       </p>
-      <div className="text-[12px] flex flex-row justify-center items-center gap-8 h-max">
+      <div className="text-[12px] flex flex-row justify-center items-center gap-8 h-max max-sm:flex-col">
         <span>
           <Button variant={"link"} className="text-white text-[12px]">
             Reservation conditions

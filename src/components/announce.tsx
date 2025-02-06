@@ -17,7 +17,7 @@ export default function Announce() {
             className="absolute w-full h-full bg-secondary-foreground/50 backdrop-blur-sm"
             onClick={() => setIsAnnouceOpen(false)}
           />
-          <div className="absolute flex flex-col w-[80dvw] h-max text-[#4A0000] bg-white justify-start items-center gap-6 p-10 rounded-xl border-2 border-[#4A0000] top-[200]">
+          <div className="absolute flex flex-col w-[80dvw] h-max text-[#4A0000] bg-white justify-start items-center gap-6 p-10 rounded-xl border-2 border-[#4A0000] top-[10%] max-sm:p-4">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
               Announcement
             </h1>
@@ -34,7 +34,7 @@ export default function Announce() {
               damage is found, the school shall treat this as your negligence
               and you may be liable for such damage.
             </p>
-            <div className="font-semibold w-max flex flex-col items-center self-end">
+            <div className="font-semibold w-max flex flex-col items-center self-end *:max-sm:text-sm max-sm:self-center">
               <p>Effective {date}</p>
               <p>School of Information Technology</p>
             </div>
