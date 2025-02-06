@@ -21,6 +21,10 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         building:
           "bg-[#0d3168dd] text-primary-foreground before:duration-300 before:absolute before:left-0 before:w-full before:h-full before:bg-[#ffffff01] hover:before:bg-[#ffffff30] before:rounded-full",
+        lecture:
+          "bg-[#9D64A7] border-black border duration-300 w-max px-7 text-primary-foreground shadow-md shadow-[#0d316891] hover:bg-[#c47ed1]",
+        staff:
+          "bg-[#D988B9] border-black border duration-300 w-max px-7 text-primary-foreground shadow-md shadow-[#0d316891] hover:bg-[#ffaae9]",
       },
       size: {
         default: "h-9 px-4 py-2",
