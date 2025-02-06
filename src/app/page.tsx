@@ -39,8 +39,9 @@ const areas = [
 ];
 
 export default function page() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
+  const [room, setRoom] = useState<string>("");
   return (
     <>
       <HeroComponent />
@@ -94,7 +95,7 @@ export default function page() {
             </Command>
           </PopoverContent>
         </Popover>
-        <RenderBuildingComponent />
+        <RenderBuildingComponent buildingName={value} />
       </section>
     </>
   );
