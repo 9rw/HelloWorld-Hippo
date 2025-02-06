@@ -40,7 +40,7 @@ export default function Hero() {
         <h3 className="text-lg drop-shadow-[0_4px_8px_#000000a0]">
           Classroom booking system via website
         </h3>
-        <div className="text-secondary-foreground/50 flex flex-row gap-5 justify-center items-center h-14 my-8 max-lg:flex-col">
+        <div className="text-secondary-foreground/50 flex flex-row gap-5 justify-center items-center h-max my-8 max-lg:flex-col">
           <Button
             variant={"outline"}
             role="combobox"
