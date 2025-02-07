@@ -106,7 +106,7 @@ export default function Hero() {
                 role="combobox"
                 aria-expanded={openArea}
                 aria-label="Select Building Area"
-                className="w-[200px] justify-between uppercase"
+                className="w-[200px] justify-between uppercase text-left font-normal shadow-md shadow-[#0d316891]"
               >
                 {value
                   ? areas.find((area) => area.value === value)?.value
@@ -148,7 +148,7 @@ export default function Hero() {
                 role="combobox"
                 aria-expanded={openRoom}
                 aria-label="Select Room"
-                className="w-[200px] justify-between uppercase"
+                className="w-[200px] justify-between uppercase text-left font-normal shadow-md shadow-[#0d316891]"
               >
                 {selectedRoom ? selectedRoom : "room"}
                 <ChevronsUpDown className="opacity-50" />
@@ -217,7 +217,7 @@ export default function Hero() {
         </div>
         <Button
           variant="building"
-          className="relative uppercase bg-[#0d3168] before:rounded-md"
+          className="relative uppercase bg-[#0d3168] before:rounded-md w-[200px] font-normal shadow-md shadow-[#0d316891]"
           aria-label="Check the rooms"
           onClick={() => {
             if (!selectedRoom) {
