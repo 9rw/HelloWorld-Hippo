@@ -4,7 +4,8 @@ import Image from "next/image";
 
 import AnnounceComponent from "@/components/announce";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, CalendarIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 import { cn } from "@/lib/utils";
 import {
@@ -23,29 +24,28 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { format, set } from "date-fns";
 
 const areas = [
-  {
-    value: "CB2 Building",
-  },
-  {
-    value: "LX Building",
-  },
-  {
-    value: "SIT Building",
-  },
+  { value: "CB2 Building" },
+  { value: "LX Building" },
+  { value: "SIT Building" },
 ];
 
-type Building = Record<string, Record<string, string[]>>;
+type Building = Record<
+  string,
+  Record<string, Record<string, { id: number; name: string }>>
+>;
 
 export default function Hero() {
+  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [buildings, setBuildings] = useState<Building>({});
   const [rooms, setRooms] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [openArea, setOpenArea] = useState(false);
+  const [openRoom, setOpenRoom] = useState(false);
   const [value, setValue] = useState("");
   const [date, setDate] = useState<Date | undefined>();
 
@@ -57,8 +57,8 @@ export default function Hero() {
           throw new Error("Failed to fetch rooms");
         }
         const res = await response.json();
-        if (res.success && Array.isArray(res.data)) {
-          setBuildings(res.data[0]);
+        if (res.success) {
+          setBuildings(res.data);
         } else {
           throw new Error("Invalid data format");
         }
@@ -68,31 +68,52 @@ export default function Hero() {
         setLoading(false);
       }
     };
-    
+
     fetchRooms();
   }, []);
-  
+
+  const handleAreaSelect = (currentValue: string) => {
+    setValue(currentValue === value ? "" : currentValue);
+    setOpenArea(false);
+    setRooms([]);
+    Object.keys(buildings[currentValue]).forEach((building) => {
+      Object.keys(buildings[currentValue][building]).forEach((room) => {
+        setRooms((rooms) => [...rooms, room]);
+      });
+    });
+  };
+
+  const handleRoomSelect = (currentValue: string) => {
+    setOpenRoom(false);
+    setSelectedRoom(currentValue);
+  };
+
+  useEffect(() => {
+    console.log(rooms);
+  }, [rooms]);
+
   return (
     <section className="relative flex w-full h-screen flex-row justify-center items-center">
       <AnnounceComponent />
       <div className="mt-[164px] absolute text-white z-[1] flex w-full h-full flex-col items-center justify-center -top-[164px]">
         <h1 className="lg:text-6xl md:text-4xl text-2xl drop-shadow-[0_4px_10px_#000000a0]">
-          School of Information Teachnology
+          School of Information Technology
         </h1>
         <h3 className="text-lg drop-shadow-[0_4px_8px_#000000a0]">
           Classroom booking system via website
         </h3>
         <div className="text-secondary-foreground/50 flex flex-row gap-5 justify-center items-center h-max my-8 max-lg:flex-col">
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={openArea} onOpenChange={setOpenArea}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={open}
+                aria-expanded={openArea}
+                aria-label="Select Building Area"
                 className="w-[200px] justify-between ml-[40px]"
               >
                 {value
-                  ? areas.find((areas) => areas.value === value)?.value
+                  ? areas.find((area) => area.value === value)?.value
                   : "Building Areas"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
@@ -103,20 +124,17 @@ export default function Hero() {
                 <CommandList>
                   <CommandEmpty>No areas found.</CommandEmpty>
                   <CommandGroup>
-                    {areas.map((areas) => (
+                    {areas.map((area) => (
                       <CommandItem
-                        key={areas.value}
-                        value={areas.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          setOpen(false);
-                        }}
+                        key={area.value}
+                        value={area.value}
+                        onSelect={() => handleAreaSelect(area.value)}
                       >
-                        {areas.value}
+                        {area.value}
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === areas.value ? "opacity-100" : "opacity-0"
+                            value === area.value ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>
@@ -127,41 +145,46 @@ export default function Hero() {
             </PopoverContent>
           </Popover>
           <hr className="w-[1px] h-full bg-white" />
-          <Popover>
+          <Popover open={openRoom} onOpenChange={setOpenRoom}>
             <PopoverTrigger asChild>
               <Button
-                variant={"outline"}
+                variant="outline"
                 role="combobox"
+                aria-expanded={openRoom}
+                aria-label="Select Room"
                 className="w-[200px] justify-between uppercase"
               >
-                Room
+                {selectedRoom ? selectedRoom : "Select the area"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent>
-            <Command>
-                <CommandInput placeholder="Search areas" className="h-9" />
+            <PopoverContent className="p-0">
+              <Command>
+                <CommandInput placeholder="Search rooms" className="h-9" />
                 <CommandList>
-                  <CommandEmpty>No room found.</CommandEmpty>
+                  <CommandEmpty>No rooms found.</CommandEmpty>
                   <CommandGroup>
-                    {areas.map((areas) => (
+                    {rooms && rooms.map((room) => (
                       <CommandItem
-                        key={areas.value}
-                        value={areas.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          setOpen(false);
-                        }}
+                        key={room}
+                        value={room}
+                        onSelect={() => handleRoomSelect(room)}
                       >
-                        {areas.value}
+                        {room}
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === areas.value ? "opacity-100" : "opacity-0"
+                            selectedRoom === room ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>
                     ))}
+                    <CommandItem
+                      value="Room 101"
+                      onSelect={() => setSelectedRoom(() => null)}
+                    >
+                      {!rooms.length && ("Select the area")}
+                    </CommandItem>
                   </CommandGroup>
                 </CommandList>
               </Command>
@@ -171,11 +194,12 @@ export default function Hero() {
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                variant={"outline"}
+                variant="outline"
                 className={cn(
                   "w-[200px] justify-start text-left font-normal shadow-md shadow-[#0d316891]",
                   !date && "text-muted-foreground"
                 )}
+                aria-label="Select Date"
               >
                 <CalendarIcon />
                 {date ? (
@@ -196,12 +220,36 @@ export default function Hero() {
           </Popover>
         </div>
         <Button
-          variant={"building"}
+          variant="building"
           className="relative uppercase bg-[#0d3168] before:rounded-md"
+          aria-label="Check the rooms"
+          onClick={() => {
+            if (!selectedRoom) {
+              return toast({
+                title: "No room selected",
+                description: "You must select room before checking.",
+                variant: "destructive",
+              });
+            }
+            if (!date) {
+              return toast({
+                title: "No date selected",
+                description: "You must select date before checking.",
+                variant: "destructive",
+              });
+            }
+            toast({
+              title: "Check the room",
+              description: `Redirect to ${selectedRoom} at ${date.toLocaleDateString()}.`,
+              variant: "default",
+            });
+          }}
         >
-          check the rooms
+          Check the rooms
         </Button>
       </div>
+      {loading && <div className="absolute z-10">Loading...</div>}
+      {error && <div className="absolute z-10 text-red-500">{error}</div>}
       <Image
         src="/SIT Building.webp"
         alt="SIT"

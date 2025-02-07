@@ -4,7 +4,10 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 import RenderTableComponent from "./renderTable";
 
-type Building = Record<string, Record<string, string[]>>;
+type Building = Record<
+  string,
+  Record<string, Record<string, { id: number; name: string }>>
+>;
 
 interface RenderBuildingProps {
   buildingName?: string;
@@ -24,8 +27,8 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
           throw new Error("Failed to fetch rooms");
         }
         const res = await response.json();
-        if (res.success && Array.isArray(res.data)) {
-          setBuildings(res.data[0]);
+        if (res.success) {
+          setBuildings(res.data);
         } else {
           throw new Error("Invalid data format");
         }
@@ -57,14 +60,15 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
       </h1>
     </div>
   );
+
   const renderRoomButton = (buildingName: string) =>
-    Object.entries(buildings[buildingName]).map(([floorName, rooms], k) => (
+    Object.keys(buildings[buildingName]).map((floorName, k) => (
       <div key={k} className="mb-20">
         <h1 className="text-2xl text-secondary-foreground font-bold opacity-80 py-10 [text-shadow:_0_4px_5px_#00000070]">
           {floorName}
         </h1>
         <div className="flex flex-row flex-wrap gap-4">
-          {rooms.map((room, l) => (
+          {Object.keys(buildings[buildingName][floorName]).map((room, l) => (
             <Button
               key={l}
               variant={nowRoom === room ? "building" : "secondary"}
@@ -84,10 +88,11 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
         </div>
       </div>
     ));
+
   return (
     <div className="w-full h-max px-10 flex flex-col gap-10 py-20">
       {!buildingName &&
-        Object.entries(buildings).map(([name], i) => (
+        Object.keys(buildings).map((name, i) => (
           <div key={i} className="relative pb-20">
             <span id={`${name.slice(0, 2)}`} className="absolute top-[-164px]" />
             {renderBuildingImage(name)}
