@@ -84,8 +84,8 @@ export default function Hero() {
   };
 
   const handleRoomSelect = (currentValue: string) => {
+    setSelectedRoom(currentValue === selectedRoom ? "" : currentValue);
     setOpenRoom(false);
-    setSelectedRoom(currentValue);
   };
 
   useEffect(() => {
@@ -114,13 +114,13 @@ export default function Hero() {
               >
                 {value
                   ? areas.find((area) => area.value === value)?.value
-                  : "Building Areas"}
+                  : "Building Area"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
               <Command>
-                <CommandInput placeholder="Search areas" className="h-9" />
+                <CommandInput placeholder="Search area" className="h-9" />
                 <CommandList>
                   <CommandEmpty>No areas found.</CommandEmpty>
                   <CommandGroup>
@@ -154,13 +154,13 @@ export default function Hero() {
                 aria-label="Select Room"
                 className="w-[200px] justify-between uppercase"
               >
-                {selectedRoom ? selectedRoom : "Select the area"}
+                {selectedRoom ? selectedRoom : "room"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0">
               <Command>
-                <CommandInput placeholder="Search rooms" className="h-9" />
+                <CommandInput placeholder="Search room" className="h-9" />
                 <CommandList>
                   <CommandEmpty>No rooms found.</CommandEmpty>
                   <CommandGroup>
