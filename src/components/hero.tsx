@@ -110,7 +110,7 @@ export default function Hero() {
                 role="combobox"
                 aria-expanded={openArea}
                 aria-label="Select Building Area"
-                className="w-[200px] justify-between ml-[40px]"
+                className="w-[200px] justify-between"
               >
                 {value
                   ? areas.find((area) => area.value === value)?.value
