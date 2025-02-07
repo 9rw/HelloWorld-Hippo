@@ -88,10 +88,6 @@ export default function Hero() {
     setOpenRoom(false);
   };
 
-  useEffect(() => {
-    console.log(rooms);
-  }, [rooms]);
-
   return (
     <section className="relative flex w-full h-screen flex-row justify-center items-center">
       <AnnounceComponent />
