@@ -73,6 +73,7 @@ export default function Hero() {
           title: "Error",
           description: error.message,
           variant: "destructive",
+          duration: 1000,
         });
       } finally {
         setLoading(false);
@@ -107,6 +108,7 @@ export default function Hero() {
         title: "No room selected",
         description: "You must select a room before checking.",
         variant: "destructive",
+        duration: 1000,
       });
     }
     if (!date) {
@@ -114,6 +116,7 @@ export default function Hero() {
         title: "No date selected",
         description: "You must select a date before checking.",
         variant: "destructive",
+        duration: 1000,
       });
     }
     setDate(date);
@@ -122,6 +125,7 @@ export default function Hero() {
       title: "Checking the room",
       description: `Redirecting to ${selectedRoom} on ${format(date, "PPP")}.`,
       variant: "default",
+      duration: 1000,
     });
     router.push(`/room`);
   };

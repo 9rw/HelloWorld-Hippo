@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./ui/input";
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 
 export default function Nav() {
-  // const [openHelp, setOpenHelp] = useState(false);
+  
   return (
     <nav className="z-[49] fixed top-0 flex justify-between items-center px-10 py-4 w-full h-[164px] bg-white text-primary-background border-b-2 border-primary-foreground/20 shadow-lg">
       <div className="min-w-[200px] min-h-[100px] max-h-[100px] max-w-[200px] max-sm:min-w-[50px] max-sm:min-h-[50px] max-sm:max-h-[50px]">

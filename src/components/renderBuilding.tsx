@@ -92,10 +92,6 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
     [toDayDate]
   );
 
-  useEffect(() => {
-    console.log(reserve);
-  }, [reserve]);
-
   const renderBuildingImage = useCallback(
     (name: string) => (
       <div className="relative flex flex-col justify-center items-center w-full h-[200px] overflow-hidden rounded-lg shadow-md shadow-secondary-foreground">
@@ -144,6 +140,8 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
                   {nowRoom === room.id && (
                     <div className="mt-4 flex justify-center w-full">
                       <RenderTable
+                        buildingName={buildingName}
+                        roomName={room.name}
                         roomId={nowRoom.toString()}
                         date={toDayDate}
                       />

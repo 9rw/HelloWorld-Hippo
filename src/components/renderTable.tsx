@@ -3,11 +3,15 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { format, isWithinInterval, parseISO } from "date-fns";
 import { Button } from "./ui/button";
+
+import { ReserveForm } from "./reserveForm";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "@/hooks/use-toast";
 
 interface Reservation {
   reservationId: number;
@@ -24,51 +28,43 @@ interface TimeSlot {
   time: string;
 }
 interface RenderTableProps {
+  buildingName: string;
+  roomName: string;
   roomId: string;
   date: Date | undefined;
 }
 
-
-interface TimePeriod {
-  start: string;
-  end: string;
-}
-
-interface ReservationTimes {
-  morning?: TimePeriod;
-  afternoon?: TimePeriod;
-  evening?: TimePeriod;
-}
-
-interface ReservationRequest {
-  title: string;
-  description: string;
-  times: ReservationTimes[];
-  firstName: string;
-  lastName: string;
-  email: string;
-  roomId: number;
-}
-
-export default function RenderTable({ roomId, date }: RenderTableProps) {
+export default function RenderTable({
+  buildingName,
+  roomName,
+  roomId,
+  date,
+}: RenderTableProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [part, setPart] = useState<string | null>(null);
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
-  const [selectedSlots, setSelectedSlots] = useState<Record<string, number[]>>({});
-  const [formData, setFormData] = useState<{ selectedTimes: Record<string, string[]> }>({
+  const [selectedSlots, setSelectedSlots] = useState<Record<string, number[]>>(
+    {}
+  );
+  const [formData, setFormData] = useState<{
+    selectedTimes: Record<string, string[]>;
+  }>({
     selectedTimes: {},
   });
   const [initialIndex, setInitialIndex] = useState<number | null>(null);
-  const [data, setData] = useState<Record<string, string>>({});
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [reserve, setReserve] = useState<any>();
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         if (date !== undefined) {
           const responseRoom = await fetch(
-            `http://helloworld01.sit.kmutt.ac.th:3002/api/rooms/room-schedule?roomId=${roomId}&date=${date ? format(date, "yyyy-MM-dd") : ""}`
+            `http://helloworld01.sit.kmutt.ac.th:3002/api/rooms/room-schedule?roomId=${roomId}&date=${
+              date ? format(date, "yyyy-MM-dd") : ""
+            }`
           );
           if (!responseRoom.ok) {
             throw new Error("Failed to fetch data");
@@ -96,7 +92,10 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
       let currentTime = start;
       while (currentTime <= end) {
         times.push({
-          time: `${currentTime.getHours().toString().padStart(2, "0")}:${currentTime
+          time: `${currentTime
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${currentTime
             .getMinutes()
             .toString()
             .padStart(2, "0")}`,
@@ -131,7 +130,9 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
 
   const getReservationDetails = (slotTime: string) => {
     return reservations.find((reservation) => {
-      const slotDate = parseISO(`${format(date ?? new Date(), "yyyy-MM-dd")}T${slotTime}:00`);
+      const slotDate = parseISO(
+        `${format(date ?? new Date(), "yyyy-MM-dd")}T${slotTime}:00`
+      );
       return isWithinInterval(slotDate, {
         start: parseISO(reservation.reservationStart),
         end: parseISO(reservation.reservationEnd),
@@ -170,7 +171,13 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
           const updatedSlots = {
             ...prev,
             [nowAt]: Array.from(
-              new Set([...prev[nowAt], ...Array.from({ length: Math.abs(timeIndex - initialIndex!) + 1 }, (_, i) => Math.min(timeIndex, initialIndex!) + i)])
+              new Set([
+                ...prev[nowAt],
+                ...Array.from(
+                  { length: Math.abs(timeIndex - initialIndex!) + 1 },
+                  (_, i) => Math.min(timeIndex, initialIndex!) + i
+                ),
+              ])
             ),
           };
           setFormData((prevData) => ({
@@ -189,44 +196,40 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
     [isSelecting, part, initialIndex, timeSlots]
   );
 
-  
-
   const handleReserveClick = async () => {
-    const formattedData = Object.entries(formData.selectedTimes).reduce((acc, [nowAt, times]) => {
-      if (times.length > 0) {
-        const [startHours, startMinutes] = times[0].split(":").map(Number);
-        const [endHours, endMinutes] = times[times.length - 1].split(":").map(Number);
-        const dateStart = new Date(date ?? new Date());
-        const dateEnd = new Date(date ?? new Date());
-        dateStart.setHours(startHours, startMinutes, 0, 0);
-        dateEnd.setHours(endHours, endMinutes, 0, 0);
-        acc[nowAt] = {
-          datestart: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
-          dateend: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
-        };
-      }
-      return acc;
-    }, {} as Record<string, { datestart: string; dateend: string }>);
-    try {
-      const response = await fetch('http://helloworld01.sit.kmutt.ac.th:3002/reservation/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedData),
+    if (Object.values(formData.selectedTimes).every((arr) => arr.length < 2)) {
+      return toast({
+        variant: "destructive",
+        title: "Invalid reservation",
+        description: "Please select a valid time slot",
+        duration: 2000,
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to create reservation');
-      }
-  
-      const result = await response.json();
-      console.log('Reservation successful', result);
-    } catch (error) {
-      console.error('Error creating reservation:', error);
     }
+    isOpen ? setIsOpen(false) : setIsOpen(true);
 
-    console.log('Reserve button clicked', formattedData);
+    const formattedData = Object.entries(formData.selectedTimes).reduce(
+      (acc, [nowAt, times]) => {
+        if (times.length > 0) {
+          const [startHours, startMinutes] = times[0].split(":").map(Number);
+          const [endHours, endMinutes] = times[times.length - 1]
+            .split(":")
+            .map(Number);
+          const dateStart = new Date(date ?? new Date());
+          const dateEnd = new Date(date ?? new Date());
+          dateStart.setHours(startHours, startMinutes, 0, 0);
+          dateEnd.setHours(endHours, endMinutes, 0, 0);
+          acc.push({
+            [nowAt]: {
+              start: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
+              end: format(dateEnd, "yyyy-MM-dd' 'HH:mm:ss"),
+            },
+          });
+        }
+        return acc;
+      },
+      [{}]
+    );
+    setReserve(formattedData);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -269,14 +272,20 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
                           </PopoverTrigger>
                           <PopoverContent className="h-max w-full bg-lecturer border-2 border-lecturer-shadow">
                             <div className="text-lecturer-shadow relative text-[8px] flex gap-[4px] flex-col h-max w-max">
-                              <p className="bg-lecturer-shadow text-white text-center rounded-sm py-1 uppercase">{reservationDetails.title}</p>
+                              <p className="bg-lecturer-shadow text-white text-center rounded-sm py-1 uppercase">
+                                {reservationDetails.title}
+                              </p>
                               <div>
-                              <p>Description</p>
-                              <p className="bg-lecturer font-thin brightness-150 border-lecturer-shadow border-2 rounded-sm">{reservationDetails.description}</p>
+                                <p>Description</p>
+                                <p className="bg-lecturer font-thin brightness-150 border-lecturer-shadow border-2 rounded-sm">
+                                  {reservationDetails.description}
+                                </p>
                               </div>
                               <div>
-                              <p>Create by</p>
-                              <p className="bg-lecturer font-thin brightness-150 border-lecturer-shadow border-2 rounded-sm">{reservationDetails.createdBy}</p>
+                                <p>Create by</p>
+                                <p className="bg-lecturer font-thin brightness-150 border-lecturer-shadow border-2 rounded-sm">
+                                  {reservationDetails.createdBy}
+                                </p>
                               </div>
                             </div>
                           </PopoverContent>
@@ -288,7 +297,9 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
                     <td
                       key={`${name}-${timeIndex}`}
                       className={`h-20 border border-black text-center cursor-pointer duration-300 hover:bg-gray-200 ${
-                        isTimeSlotSelected(name, timeIndex) ? "bg-slate-400" : ""
+                        isTimeSlotSelected(name, timeIndex)
+                          ? "bg-slate-400"
+                          : ""
                       }`}
                       onMouseDown={() => handleMouseDown(name, timeIndex)}
                       onMouseEnter={() => handleMouseEnter(timeIndex, name)}
@@ -311,7 +322,19 @@ export default function RenderTable({ roomId, date }: RenderTableProps) {
       >
         Reserve
       </Button>
+      {isOpen && (
+        <div className="z-[51] backdrop-blur-sm fixed top-0 left-0 w-full min-h-screen h-max bg-black bg-opacity-50 flex flex-col justify-center items-center">
+          <ReserveForm
+            building={buildingName}
+            room={roomId}
+            reserve={reserve}
+          />
+          <div
+            className="absolute -z-10 min-h-screen w-full"
+            onClick={handleReserveClick}
+          />
+        </div>
+      )}
     </div>
-    
   );
 }

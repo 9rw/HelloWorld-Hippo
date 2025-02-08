@@ -106,6 +106,7 @@ export default function Page() {
     if (key && date) {
       fetchreserve(Number(key));
     }
+    console.log(buildings);
   }, [key, date, fetchreserve]);
 
   if (loading) return <p>Loading buildings...</p>;
@@ -160,7 +161,7 @@ export default function Page() {
         </div>
       </div>
 
-      <RenderTableComponent roomId={key} date={date} />
+      <RenderTableComponent roomId={key} date={date} buildingName={room} roomName={room} />
     </div>
   );
 }
