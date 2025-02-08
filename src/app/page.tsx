@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 
 import RenderBuildingComponent from "../components/renderBuilding";
-import HeroComponent from "../components/hero";
+import HeaderComponent from "../components/header"
 
 import { cn } from "@/lib/utils";
 import {
@@ -22,9 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { Check, ChevronsUpDown } from "lucide-react";
-
-import TableComponent from "@/components/timetable";
-
 const areas = [
   {
     value: "CB2 Building"
@@ -42,7 +38,7 @@ export default function page() {
   const [value, setValue] = useState<string>("");
   return (
     <>
-      <HeroComponent />
+      <HeaderComponent />
       <section className="relative flex w-full h-max flex-col items-start">
         <h1 className="text-[#0d3168dd] text-center w-full my-20 lg:text-6xl md:text-4xl text-2xl">
           Have fun using the classroom.

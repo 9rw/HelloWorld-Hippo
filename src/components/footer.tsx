@@ -9,7 +9,7 @@ export default function footer() {
       <div className="flex flex-row justify-center h-max gap-10 max-md:flex-col">
         <div className="flex flex-col">
           <Image
-            src="/logo-white.svg"
+            src="/logo/logo-white.svg"
             alt="SIT"
             width={200}
             height={100}
@@ -134,13 +134,13 @@ export default function footer() {
             Reservation conditions
           </Button>
         </span>
-        <hr className="w-[1px] h-[24px] bg-white" />
+        <hr className="w-[1px] h-[24px] max-sm:h-[1] max-sm:w-[10%] bg-white" />
         <span>
           <Button variant={"link"} className="text-white text-[12px]">
             Cookie Policy
           </Button>
         </span>
-        <hr className="w-[1px] h-[24px] bg-white" />
+        <hr className="w-[1px] h-[24px] max-sm:h-[1] max-sm:w-[10%] bg-white" />
         <span>
           <Button variant={"link"} className="text-white text-[12px]">
             Website Feedback

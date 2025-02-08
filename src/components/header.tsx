@@ -1,10 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import Image from "next/image";
 
 import AnnounceComponent from "@/components/announce";
+import { RoomContext } from "../context/roomContext";
+import { DateContext } from "../context/dateContext";
 
-import { Check, ChevronsUpDown, CalendarIcon } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 import { cn } from "@/lib/utils";
@@ -24,7 +26,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 
-import { format, set } from "date-fns";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const areas = [
   { value: "CB2 Building" },
@@ -38,21 +41,23 @@ type Building = Record<
 >;
 
 export default function Hero() {
+  const router = useRouter();
+  const { room, setRoom, key, setKey } = useContext(RoomContext);
+  const { date, setDate } = useContext(DateContext);
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [buildings, setBuildings] = useState<Building>({});
-  const [rooms, setRooms] = useState<string[]>([]);
+  const [rooms, setRooms] = useState<{ id: number; name: string }[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [openArea, setOpenArea] = useState(false);
   const [openRoom, setOpenRoom] = useState(false);
   const [value, setValue] = useState("");
-  const [date, setDate] = useState<Date | undefined>();
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await fetch("http://localhost:3002/api/rooms");
+        const response = await fetch("http://helloworld01.sit.kmutt.ac.th:3002/api/rooms");
         if (!response.ok) {
           throw new Error("Failed to fetch rooms");
         }
@@ -64,28 +69,61 @@ export default function Hero() {
         }
       } catch (error: any) {
         setError(error.message);
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
     };
-
     fetchRooms();
-  }, []);
+  }, [toast]);
 
-  const handleAreaSelect = (currentValue: string) => {
+  const handleAreaSelect = useMemo(() => (currentValue: string) => {
     setValue(currentValue === value ? "" : currentValue);
     setOpenArea(false);
     setRooms([]);
     Object.keys(buildings[currentValue]).forEach((building) => {
       Object.keys(buildings[currentValue][building]).forEach((room) => {
-        setRooms((rooms) => [...rooms, room]);
+        setRooms((rooms) => [...rooms, buildings[currentValue][building][room]]);
       });
     });
-  };
+  }, [buildings, value]);
 
-  const handleRoomSelect = (currentValue: string) => {
-    setSelectedRoom(currentValue === selectedRoom ? "" : currentValue);
-    setOpenRoom(false);
+  const handleRoomSelect = useMemo(() => (currentValue: string) => {
+    const selectedRoomObj = rooms.find((room) => room.name === currentValue);
+    if (selectedRoomObj) {
+      setSelectedRoom(currentValue === selectedRoom ? "" : currentValue);
+      setOpenRoom(false);
+      setKey(selectedRoomObj.id.toString());
+    }
+  }, [rooms, selectedRoom]);
+
+  const handleCheckRooms = async () => {
+    if (!selectedRoom) {
+      return toast({
+        title: "No room selected",
+        description: "You must select a room before checking.",
+        variant: "destructive",
+      });
+    }
+    if (!date) {
+      return toast({
+        title: "No date selected",
+        description: "You must select a date before checking.",
+        variant: "destructive",
+      });
+    }
+    setDate(date);
+    setRoom(selectedRoom);
+    toast({
+      title: "Checking the room",
+      description: `Redirecting to ${selectedRoom} on ${format(date, "PPP")}.`,
+      variant: "default",
+    });
+    router.push(`/room`);
   };
 
   return (
@@ -160,26 +198,29 @@ export default function Hero() {
                 <CommandList>
                   <CommandEmpty>No rooms found.</CommandEmpty>
                   <CommandGroup>
-                    {rooms && rooms.map((room) => (
-                      <CommandItem
-                        key={room}
-                        value={room}
-                        onSelect={() => handleRoomSelect(room)}
-                      >
-                        {room}
-                        <Check
-                          className={cn(
-                            "ml-auto",
-                            selectedRoom === room ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
+                    {rooms &&
+                      rooms.map((room) => (
+                        <CommandItem
+                          key={room.id}
+                          value={room.name}
+                          onSelect={() => handleRoomSelect(room.name)}
+                        >
+                          {room.name}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              selectedRoom === room.name
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
                     <CommandItem
                       value="Room 101"
                       onSelect={() => setSelectedRoom(() => null)}
                     >
-                      {!rooms.length && ("Select the area")}
+                      {!rooms.length && "Select the area"}
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
@@ -192,24 +233,24 @@ export default function Hero() {
               <Button
                 variant="outline"
                 className={cn(
-                  "w-[200px] justify-start text-left font-normal shadow-md shadow-[#0d316891]",
-                  !date && "text-muted-foreground"
+                  "w-[200px] justify-between text-left font-normal shadow-md shadow-[#0d316891]",
+                  !date && "text-muted-foreground uppercase"
                 )}
                 aria-label="Select Date"
               >
-                <CalendarIcon />
                 {date ? (
                   format(date, "PPP")
                 ) : (
-                  <span className="uppercase">Choose Date</span>
+                  "Choose Date"
                 )}
+                <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={(day) => setDate(day ?? undefined)}
                 initialFocus
               />
             </PopoverContent>
@@ -219,29 +260,9 @@ export default function Hero() {
           variant="building"
           className="relative uppercase bg-[#0d3168] before:rounded-md w-[200px] font-normal shadow-md shadow-[#0d316891]"
           aria-label="Check the rooms"
-          onClick={() => {
-            if (!selectedRoom) {
-              return toast({
-                title: "No room selected",
-                description: "You must select room before checking.",
-                variant: "destructive",
-              });
-            }
-            if (!date) {
-              return toast({
-                title: "No date selected",
-                description: "You must select date before checking.",
-                variant: "destructive",
-              });
-            }
-            toast({
-              title: "Check the room",
-              description: `Redirect to ${selectedRoom} at ${date.toLocaleDateString()}.`,
-              variant: "default",
-            });
-          }}
+          onClick={handleCheckRooms}
         >
-          Check the rooms
+          Check the room
         </Button>
       </div>
       {loading && <div className="absolute z-10">Loading...</div>}
@@ -251,6 +272,7 @@ export default function Hero() {
         alt="SIT"
         width={2560}
         height={1696}
+        priority={true}
         className="z-0 absolute w-full h-screen object-cover"
       />
     </section>
