@@ -12,7 +12,7 @@ export default function Announce() {
   return (
     <>
       {isAnnounceOpen && (
-        <div className="z-[99] fixed w-full h-full flex justify-center items-center">
+        <div className="z-[51] fixed w-full h-full flex justify-center items-center">
           <div
             className="absolute w-full h-full bg-secondary-foreground/50 backdrop-blur-sm"
             onClick={() => setIsAnnouceOpen(false)}

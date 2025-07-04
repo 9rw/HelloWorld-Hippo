@@ -12,6 +12,14 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+				lecturer: {
+					DEFAULT: '#9D64A7',
+					shadow: '#543559'
+				},
+				staff: {
+					DEFAULT: '#D988B9',
+					shadow: '#885473'
+				},
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
