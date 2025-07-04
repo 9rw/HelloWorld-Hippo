@@ -1,42 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏢 Room Reservation System
 
-## Getting Started
+A modern room reservation system built with Next.js 15, designed and developed as part of a **Hello World Hippo Camp**. This project demonstrates the implementation of a complete room booking system with a clean, responsive interface.
 
-Installing:
+## 🎯 Project Overview
 
-```bash 
-npm i --legacy-peer-dep
+This room reservation system allows users to:
+- Browse available rooms across multiple buildings (CB2, LX, SIT)
+- View room availability in real-time
+- Make room reservations with date/time selection
+- Report room issues and problems
+- Manage bookings with an intuitive interface
+
+## 📁 Project Structure
+
+```
+project-hello/
+├── public/
+│   ├── background/          # Building background images
+│   ├── icons/              # SVG icons for UI
+│   └── logo/               # Application logos
+├── src/
+│   ├── app/                # Next.js App Router pages
+│   │   ├── page.tsx        # Home page - building selection
+│   │   ├── room/           # Room booking page
+│   │   └── report/         # Issue reporting page
+│   ├── components/         # Reusable React components
+│   │   ├── ui/             # Radix UI components
+│   │   ├── announce.tsx    # Announcement component
+│   │   ├── footer.tsx      # Footer component
+│   │   ├── header.tsx      # Header component
+│   │   ├── nav.tsx         # Navigation component
+│   │   ├── renderBuilding.tsx # Building display
+│   │   ├── renderTable.tsx # Room table display
+│   │   ├── reportForm.tsx  # Issue reporting form
+│   │   └── reserveForm.tsx # Reservation form
+│   ├── context/            # React Context providers
+│   │   ├── dateContext.tsx # Date management
+│   │   └── roomContext.tsx # Room data management
+│   ├── hooks/              # Custom React hooks
+│   │   └── use-toast.ts    # Toast notification hook
+│   └── lib/                # Utility functions
+│       └── utils.ts        # Helper functions
+├── components.json         # UI component configuration
+├── tailwind.config.ts      # Tailwind CSS configuration
+└── next.config.ts          # Next.js configuration
 ```
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<details>
+<summary><strong>🏗️ Building Selection</strong></summary>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **CB2 Building**: Modern classrooms and meeting rooms
+- **LX Building**: Lecture halls and seminar rooms  
+- **SIT Building**: Technical labs and workshop spaces
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+</details>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<details>
+<summary><strong>📅 Reservation Management</strong></summary>
 
-## Learn More
+- Interactive calendar for date selection
+- Real-time availability checking
+- Time slot booking system
+- Reservation confirmation
 
-To learn more about Next.js, take a look at the following resources:
+</details>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<details>
+<summary><strong>🔧 Issue Reporting</strong></summary>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Report room problems and maintenance issues
+- Track issue status and resolution
+- User-friendly reporting interface
 
-## Deploy on Vercel
+</details>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<details>
+<summary><strong>🎨 Modern UI/UX</strong></summary>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Responsive design for all devices
+- Clean, professional interface
+- Smooth animations and transitions
+- Accessibility-focused design
+
+</details>
+
+## 🛠️ Tech Stack
+
+<details>
+<summary><strong>Frontend Framework</strong></summary>
+
+- **Next.js 15** - React framework with App Router
+- **React 19** - Modern React with latest features
+- **TypeScript** - Type-safe development
+
+</details>
+
+<details>
+<summary><strong>UI Components & Styling</strong></summary>
+
+- **Tailwind CSS** - Utility-first CSS framework
+- **Radix UI** - Headless UI components
+- **Lucide React** - Beautiful icons
+- **Tailwind Animate** - Smooth animations
+
+</details>
+
+<details>
+<summary><strong>Form Management</strong></summary>
+
+- **React Hook Form** - Performant form handling
+- **Zod** - Schema validation
+- **@hookform/resolvers** - Form validation integration
+
+</details>
+
+<details>
+<summary><strong>State Management</strong></summary>
+
+- **React Context API** - Global state management
+- **Custom Hooks** - Reusable stateful logic
+
+</details>
+
+## 🏁 Getting Started
+
+### Prerequisites
+- Node.js 18.0 or later
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. **Install dependencies**
+   ```bash
+   npm install --legacy-peer-deps
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+2. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+
+3. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
