@@ -1,4 +1,4 @@
-# 🏢 Room Reservation System
+# 🏢 Room Reservation System (Front-End only)
 
 A modern room reservation system built with Next.js 15, designed and developed as part of a **Hello World Hippo Camp**. This project demonstrates the implementation of a complete room booking system with a clean, responsive interface.
 
