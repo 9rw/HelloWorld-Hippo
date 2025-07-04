@@ -42,8 +42,13 @@ type Building = Record<
 
 export default function Hero() {
   const router = useRouter();
-  const { room, setRoom, key, setKey } = useContext(RoomContext);
+  const roomContext = useContext(RoomContext);
+  if (!roomContext) {
+    throw new Error("RoomContext must be used within a RoomProvider");
+  }
+  const { setRoom, setKey } = roomContext;
   const { date, setDate } = useContext(DateContext);
+  
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,14 +72,16 @@ export default function Hero() {
         } else {
           throw new Error("Invalid data format");
         }
-      } catch (error: any) {
-        setError(error.message);
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-          duration: 1000,
-        });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+            duration: 1000,
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -100,7 +107,7 @@ export default function Hero() {
       setOpenRoom(false);
       setKey(selectedRoomObj.id.toString());
     }
-  }, [rooms, selectedRoom]);
+  }, [rooms, selectedRoom, setKey]);
 
   const handleCheckRooms = async () => {
     if (!selectedRoom) {
@@ -254,7 +261,7 @@ export default function Hero() {
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={(day) => setDate(day ?? undefined)}
+                onSelect={(day) => setDate(day)}
                 initialFocus
               />
             </PopoverContent>

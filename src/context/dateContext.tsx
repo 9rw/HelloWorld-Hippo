@@ -2,15 +2,15 @@
 import { createContext, useState } from "react";
 
 export const DateContext = createContext<{
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  date: Date;
+  setDate: (date: Date ) => void;
 }>({
-  date: undefined,
+  date: new Date(),
   setDate: () => {},
 });
 
 export const DateProvider = ({ children }: { children: React.ReactNode }) => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<Date>(new Date());
 
   return (
     <DateContext.Provider value={{ date, setDate }}>

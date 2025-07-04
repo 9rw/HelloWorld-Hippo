@@ -62,7 +62,9 @@ export default function Nav() {
         </div>
         <div className="flex flex-row gap-2 max-lg:hidden">
           <Button variant={"secondary"}>Help</Button>
-          <Button variant={"secondary"}>Report</Button>
+          <Link href={`/report`}>
+            <Button variant={"secondary"}>Report</Button>
+          </Link>
         </div>
         <Popover>
           <PopoverTrigger asChild>

@@ -76,8 +76,10 @@ export default function RenderTable({
             throw new Error("Invalid data format");
           }
         }
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -205,7 +207,7 @@ export default function RenderTable({
         duration: 2000,
       });
     }
-    isOpen ? setIsOpen(false) : setIsOpen(true);
+    setIsOpen(!isOpen);
 
     const formattedData = Object.entries(formData.selectedTimes).reduce(
       (acc, [nowAt, times]) => {
@@ -218,12 +220,21 @@ export default function RenderTable({
           const dateEnd = new Date(date ?? new Date());
           dateStart.setHours(startHours, startMinutes, 0, 0);
           dateEnd.setHours(endHours, endMinutes, 0, 0);
-          acc.push({
-            [nowAt]: {
-              start: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
-              end: format(dateEnd, "yyyy-MM-dd' 'HH:mm:ss"),
-            },
-          });
+          acc.push(
+            dateStart < dateEnd
+              ? {
+                  [nowAt]: {
+                    start: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
+                    end: format(dateEnd, "yyyy-MM-dd' 'HH:mm:ss"),
+                  },
+                }
+              : {
+                  [nowAt]: {
+                    start: format(dateEnd, "yyyy-MM-dd' 'HH:mm:ss"),
+                    end: format(dateStart, "yyyy-MM-dd' 'HH:mm:ss"),
+                  },
+                }
+          );
         }
         return acc;
       },

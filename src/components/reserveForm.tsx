@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
+import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,19 @@ const FormSchema = z.object({
     message: "Room not valid.",
   })
 });
+// interface ReserveFormProps {
+//   building: string;
+//   room: string;
+//   reserve: Reserve;
+// }
+
+// interface Reserve {
+//   [key: string]: {
+//     start: string;
+//     end: string;
+//   };
+// }
+
 
 export function ReserveForm(p: any) {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -53,12 +66,8 @@ export function ReserveForm(p: any) {
     },
   });
   
-  console.log("error", form.formState.errors);
   useEffect(() => {
-    // console.log("reserve", p.reserve);
-    console.log("reserve", p.reserve.slice(1));
     form.setValue("times", p.reserve.slice(1));
-    console.log('times', form.getValues('times'));
   }, [p.reserve]);
   
   useEffect(() => {
@@ -68,6 +77,7 @@ export function ReserveForm(p: any) {
   
   
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    form.reset();
     fetch('http://helloworld01.sit.kmutt.ac.th:3002/reservation/create', {
       method: 'POST',
       headers: {
@@ -102,10 +112,10 @@ export function ReserveForm(p: any) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-2/3 space-y-6 bg-white h-[80dvh] overflow-auto flex flex-col items-start justify-start border-2 rounded-3xl p-6 shadow-md shadow-secondary-foreground/40"
+        className="w-2/3 space-y-6 bg-white h-[85dvh] overflow-auto flex flex-col items-start justify-start border-2 rounded-3xl p-6 shadow-md shadow-secondary-foreground/40"
       >
         <div className="flex flex-col items-center justify-center w-max">
-          <Image src={`/logo/logo.svg`} width={200} height={100} alt="logo" />
+          <Image src={`/logo/logo.svg`} width={200} height={100} priority={true} alt="logo"/>
           <h1 className="text-[30px]">Reservation</h1>
         </div>
         <div className="flex flex-col items-start justify-center w-full gap-2 *:w-full">
@@ -181,7 +191,7 @@ export function ReserveForm(p: any) {
                       disabled
                       required={false}
                       {...field}
-                      value={`${p.building}`}
+                      value={`${p.roomName}`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -200,7 +210,7 @@ export function ReserveForm(p: any) {
                       disabled
                       required={false}
                       {...field}
-                      value={`${p.building}`}
+                      value={`${Object.values(p.reserve.slice(1)).map((x: any) => x.start)}`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -219,7 +229,7 @@ export function ReserveForm(p: any) {
                       disabled
                       required={false}
                       {...field}
-                      value={`${p.building}`}
+                      value={`${Object.values(p.reserve.slice(1)).map((x: any) => x.end)}`}
                     />
                   </FormControl>
                   <FormMessage />

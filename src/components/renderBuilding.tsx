@@ -2,7 +2,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { format } from "date-fns";
 
 import RenderTable from "./renderTable";
 
@@ -14,36 +13,13 @@ type Building = Record<
 interface RenderBuildingProps {
   buildingName?: string;
 }
-interface Reservation {
-  reservationId: number;
-  title: string;
-  description: string;
-  status: string;
-  reservationStart: string;
-  reservationEnd: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-}
 
 const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
   const [loading, setLoading] = useState(true);
-  const [loadingRoom, setLoadingRoom] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nowRoom, setNowRoom] = useState<number | null>(null);
   const [buildings, setBuildings] = useState<Building>({});
-  const [reserve, setReserve] = useState<Reservation>({
-    reservationId: 0,
-    title: "",
-    description: "",
-    status: "",
-    reservationStart: "",
-    reservationEnd: "",
-    createdAt: "",
-    updatedAt: "",
-    createdBy: "",
-  });
-  const toDayDate = new Date();
+  const toDayDate = useMemo(() => new Date(), []);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -66,32 +42,6 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
     fetchRooms();
   }, []);
 
-  const fetchreserve = useCallback(
-    async (roomId: number) => {
-      setLoadingRoom(true);
-      try {
-        const response = await fetch(
-          `http://helloworld01.sit.kmutt.ac.th:3002/api/rooms/room-schedule?roomId=${roomId}&date=${format(
-            toDayDate,
-            "yyyy-MM-dd"
-          )}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch schedule");
-        const res = await response.json();
-        if (res.success) {
-          setReserve(res.data[0]);
-        } else {
-          throw new Error("Invalid schedule format");
-        }
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Unknown error");
-      } finally {
-        setLoadingRoom(false);
-      }
-    },
-    [toDayDate]
-  );
-
   const renderBuildingImage = useCallback(
     (name: string) => (
       <div className="relative flex flex-col justify-center items-center w-full h-[200px] overflow-hidden rounded-lg shadow-md shadow-secondary-foreground">
@@ -99,7 +49,7 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
           src={`/background/${name}.webp`}
           width={2560}
           height={1696}
-          priority
+          priority={true}
           alt={name}
           className="w-screen h-screen absolute -top-[160px] object-cover contrast-25 brightness-50"
         />
@@ -130,9 +80,6 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
                     onClick={() => {
                       const newRoomId = nowRoom === room.id ? null : room.id;
                       setNowRoom(newRoomId);
-                      if (newRoomId !== null) {
-                        fetchreserve(newRoomId);
-                      }
                     }}
                   >
                     {room.name}
@@ -162,7 +109,7 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
         )
       );
     },
-    [buildings, nowRoom, fetchreserve, toDayDate]
+    [buildings, nowRoom, toDayDate]
   );
 
   const buildingKeys = useMemo(() => Object.keys(buildings), [buildings]);
@@ -172,7 +119,6 @@ const RenderBuilding: React.FC<RenderBuildingProps> = ({ buildingName }) => {
 
   return (
     <div className="w-full h-max px-10 flex flex-col gap-10 py-20">
-      {loadingRoom && <p>Loading room schedule...</p>}
       {!buildingName ? (
         buildingKeys.map((name, i) => (
           <div key={i} className="relative pb-20">

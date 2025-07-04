@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 import { RoomProvider } from "@/context/roomContext";
+import { DateProvider } from "@/context/dateContext";
 import { Konkhmer_Sleokchher } from "next/font/google";
 import NavComponent from "@/components/nav";
 import FooterComponent from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
-import { DateProvider } from "../context/dateContext";
 
 const konkhmer_Sleokchher = Konkhmer_Sleokchher({
   weight: "400",
@@ -32,10 +32,10 @@ export default function RootLayout({
       >
         <RoomProvider>
           <DateProvider>
-            <NavComponent />
-            {children}
-            <Toaster />
-            <FooterComponent />
+          <NavComponent />
+          {children}
+          <Toaster />
+          <FooterComponent />
           </DateProvider>
         </RoomProvider>
       </body>

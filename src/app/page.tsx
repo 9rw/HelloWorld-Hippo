@@ -33,7 +33,7 @@ const areas = [
   },
 ];
 
-export default function page() {
+export default function Page() {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   return (
@@ -52,7 +52,7 @@ export default function page() {
               className="text-secondary-foreground/50 w-[200px] justify-between ml-[40px]"
             >
               {value
-                ? areas.find((areas) => areas.value === value)?.value
+                ? areas.find((area) => area.value === value)?.value
                 : "Building Areas"}
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -63,20 +63,20 @@ export default function page() {
               <CommandList>
                 <CommandEmpty>No areas found.</CommandEmpty>
                 <CommandGroup>
-                  {areas.map((areas) => (
+                  {areas.map((area) => (
                     <CommandItem
-                      key={areas.value}
-                      value={areas.value}
+                      key={area.value}
+                      value={area.value}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
                       }}
                     >
-                      {areas.value}
+                      {area.value}
                       <Check
                         className={cn(
                           "ml-auto",
-                          value === areas.value ? "opacity-100" : "opacity-0"
+                          value === area.value ? "opacity-100" : "opacity-0"
                         )}
                       />
                     </CommandItem>
